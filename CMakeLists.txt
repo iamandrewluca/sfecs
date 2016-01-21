@@ -22,9 +22,18 @@ set( SOURCE_PATH "${PROJECT_SOURCE_DIR}/src" )
 
 set(
         SOURCES
-        "${INCLUDE_PATH}/SFECS/Test.hpp"
         "${INCLUDE_PATH}/SFECS/Config.hpp"
-        "${SOURCE_PATH}/SFECS/Test.cpp")
+        "${INCLUDE_PATH}/SFECS/World.hpp"
+        "${SOURCE_PATH}/SFECS/World.cpp"
+        "${INCLUDE_PATH}/SFECS/Scene.hpp"
+        "${SOURCE_PATH}/SFECS/Scene.cpp"
+        "${INCLUDE_PATH}/SFECS/View.hpp"
+        "${SOURCE_PATH}/SFECS/View.cpp"
+        "${INCLUDE_PATH}/SFECS/Entity.hpp"
+        "${SOURCE_PATH}/SFECS/Entity.cpp"
+        "${INCLUDE_PATH}/SFECS/Component.hpp"
+        "${SOURCE_PATH}/SFECS/Component.cpp"
+        "${INCLUDE_PATH}/SFECS/Sfecs.hpp")
 
 include_directories( "${INCLUDE_PATH}" )
 include_directories( "${SOURCE_PATH}" )

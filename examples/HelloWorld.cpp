@@ -2,8 +2,19 @@
 // Created by Andrei on 17.01.2016.
 //
 
-#include <SFECS/Test.hpp>
+#include <SFECS/Sfecs.hpp>
 
 int main() {
-    Test().print();
+
+    sfecs::World world;
+
+    sfecs::Scene mainScene;
+
+    sfecs::View mainView;
+
+    sfecs::Entity player;
+
+    sfecs::Component renderComponent;
+
+    return 0;
 }
