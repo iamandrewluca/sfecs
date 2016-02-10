@@ -6,15 +6,15 @@
 
 int main() {
 
-    sfecs::World world;
-
-    sfecs::Scene mainScene;
-
-    sfecs::View mainView;
-
-    sfecs::Entity player;
-
-    sfecs::Component renderComponent;
+//    sfecs::World world;
+//
+//    sfecs::Scene mainScene;
+//
+//    sfecs::View mainView;
+//
+//    sfecs::Entity player;
+//
+//    sfecs::Component renderComponent;
 
     return 0;
 }
