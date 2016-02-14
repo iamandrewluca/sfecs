@@ -1,25 +1,15 @@
-//
-// Created by Andrei on 21.01.2016.
-//
+#ifndef COMPONENT_H
+#define COMPONENT_H
 
-#ifndef SFECS_COMPONENT_HPP
-#define SFECS_COMPONENT_HPP
+namespace sfecs {
 
+		class Component {
+			public:
+				virtual ~Component() = 0;
+			protected:
+				Component() {};
+		};
 
-namespace sfecs
-{
-    class Entity;
-
-    class Component {
-
-        Entity* entity{nullptr};
-
-    public:
-        virtual void update();
-        virtual void draw();
-        virtual ~Component();
-    };
 }
 
-
-#endif //SFECS_COMPONENT_HPP
+#endif

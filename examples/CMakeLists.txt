@@ -26,18 +26,6 @@ build_example( "HelloWorld" "HelloWorld.cpp" )
 #            COMMAND "${CMAKE_COMMAND}"
 #            ARGS -E copy_directory "${PROJECT_SOURCE_DIR}/examples/data" "${PROJECT_BINARY_DIR}/examples/data"
 #    )
-#
-#    add_custom_command(
-#            TARGET "Image"
-#            COMMAND "${CMAKE_COMMAND}"
-#            ARGS -E copy_directory "${PROJECT_SOURCE_DIR}/examples/data" "${PROJECT_BINARY_DIR}/examples/data"
-#    )
-#
-#    add_custom_command(
-#            TARGET "Canvas"
-#            COMMAND "${CMAKE_COMMAND}"
-#            ARGS -E copy_directory "${PROJECT_SOURCE_DIR}/examples/data" "${PROJECT_BINARY_DIR}/examples/data"
-#    )
 #endif()
 
 #install(

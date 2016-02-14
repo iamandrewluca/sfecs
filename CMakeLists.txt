@@ -12,28 +12,17 @@ set( SFECS_BUILD_EXAMPLES true CACHE BOOL "Build examples." )
 set( SFECS_BUILD_DOC false CACHE BOOL "Generate API documentation." )
 set( SFML_STATIC_LIBRARIES false CACHE BOOL "Do you want to link SFML statically?" )
 
+
 # Tell CMake where to find additional find Modules
 set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/cmake/Modules/")
 
+set(SFML_ROOT "C:/SFML")
 find_package(SFML REQUIRED system window graphics network audio)
 
 set( INCLUDE_PATH "${PROJECT_SOURCE_DIR}/include" )
 set( SOURCE_PATH "${PROJECT_SOURCE_DIR}/src" )
 
-set(
-        SOURCES
-        "${INCLUDE_PATH}/SFECS/Config.hpp"
-        "${INCLUDE_PATH}/SFECS/World.hpp"
-        "${SOURCE_PATH}/SFECS/World.cpp"
-        "${INCLUDE_PATH}/SFECS/Scene.hpp"
-        "${SOURCE_PATH}/SFECS/Scene.cpp"
-        "${INCLUDE_PATH}/SFECS/View.hpp"
-        "${SOURCE_PATH}/SFECS/View.cpp"
-        "${INCLUDE_PATH}/SFECS/Entity.hpp"
-        "${SOURCE_PATH}/SFECS/Entity.cpp"
-        "${INCLUDE_PATH}/SFECS/Component.hpp"
-        "${SOURCE_PATH}/SFECS/Component.cpp"
-        "${INCLUDE_PATH}/SFECS/Sfecs.hpp")
+file(GLOB SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} include/SFECS/*.hpp src/SFECS/*.cpp )
 
 include_directories( "${INCLUDE_PATH}" )
 include_directories( "${SOURCE_PATH}" )
@@ -126,11 +115,9 @@ else()
 endif()
 
 if( CMAKE_CXX_COMPILER MATCHES ".*clang[+][+]" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang" )
-    set( CMAKE_CXX_FLAGS "-std=c++11 -Wall -Wextra -Wshadow -Wconversion -Wsign-conversion -Wunused-parameter -Wno-long-long -pedantic ${CMAKE_CXX_FLAGS}" )
-    set( CMAKE_C_FLAGS "-Wall -Wextra -Wshadow -Wconversion -Wno-long-long -pedantic ${CMAKE_C_FLAGS}" )
+    set( CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}" )
 elseif( CMAKE_COMPILER_IS_GNUCXX )
-    set( CMAKE_CXX_FLAGS "-std=c++11 -Wall -Wextra -Wshadow -Wconversion -Wsign-conversion -Wunused-parameter -Wno-long-long -pedantic ${CMAKE_CXX_FLAGS}" )
-    set( CMAKE_C_FLAGS "-Wall -Wextra -Wshadow -Wconversion -Wno-long-long -pedantic ${CMAKE_C_FLAGS}" )
+    set( CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}" )
 endif()
 
 ### EXAMPLES ###
@@ -160,7 +147,7 @@ install(
 )
 
 install(
-        FILES README AUTHORS.md LICENSE.md FONT.LICENSE CHANGELOG.md
+        FILES README.md AUTHORS.md LICENSE.md CHANGELOG.md
         DESTINATION "${SHARE_PATH}"
 )
 

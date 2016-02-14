@@ -1,53 +1,84 @@
-//
-// Created by Andrei on 21.01.2016.
-//
+#ifndef ENTITY_H
+#define ENTITY_H
 
-#ifndef SFECS_ENTITY_HPP
-#define SFECS_ENTITY_HPP
+#include <bitset>
+#include <string>
+#include <cstddef>
+#include <typeinfo>
+#include "SFECS/BitSize.hpp"
+#include "SFECS/ImmutableBag.hpp"
+#include "SFECS/EntityManager.hpp"
+#include "SFECS/ComponentTypeManager.hpp"
 
-#include <memory>
-#include <vector>
-#include "SFECS/Component.hpp"
+namespace sfecs {
 
-namespace sfecs
-{
-    class Entity {
+	class Component;
+	class ComponentType;
+	class Manager;
+	//class EntityManager;
+	
+	class Entity {
 
-    private:
+		private:
+			int id;
+			long int uniqueId;
+			std::bitset<BITSIZE> typeBits;
+			std::bitset<BITSIZE> systemBits;
+			Manager * world;
+			EntityManager * entityManager;
+			
+			Entity(const Entity&) = delete;
+			Entity& operator=(const Entity&) = delete;
+			
+		protected:
 
-        bool alive{true};
-        std::vector<std::unique_ptr<Component>> components;
+		public:
+			Entity(Manager * world, int id);
+			~Entity();
+			int getId();
+			void setUniqueId(long int uniqueId);
+			long int getUniqueId();
 
-    public:
+			std::bitset<BITSIZE> getTypeBits();
+			void addTypeBit(std::bitset<BITSIZE> bit);
+			void removeTypeBit(std::bitset<BITSIZE> bit);
+			std::bitset<BITSIZE> getSystemBits();
+			void addSystemBit(std::bitset<BITSIZE> bit);
+			void removeSystemBit(std::bitset<BITSIZE> bit);
+			void setSystemBits(std::bitset<BITSIZE> systemBits);
+			void setTypeBits(std::bitset<BITSIZE> typeBits);
+			void reset();
 
-        void update() {
-            for (auto& c : components) { c->update(); }
-        }
+			std::string toString();
 
-        void draw() {
-            for (auto& c : components) { c->draw(); }
-        }
+			Entity& addComponent(Component * c);
 
-        bool isAlive() const { return alive; }
-        void destroy() { alive = false; }
+			//Might change to non template
+			template<typename c>
+			Entity& removeComponent() {
+				entityManager->removeComponent(*this,ComponentTypeManager::getTypeFor<c>());
+				return *this;
+			}
 
-
-        template <typename T, typename... TArgs>
-        T& addComponent(TArgs&&... mArgs) {
-            T* c(new T(std::forward<TArgs>(mArgs)...));
-
-            c->entity = this;
-
-            std::unique_ptr<Component> uPtr{c};
-
-            components.emplace_back(uPtr);
+			Entity& removeComponent(ComponentType & type);
 
 
-            return *c;
-        }
+			Component * getComponent(ComponentType & type);
 
-    };
+			template<typename c>
+			c * getComponent() {
+				return (c*)entityManager->getComponent(*this,ComponentTypeManager::getTypeFor<c>());
+			}
+
+			ImmutableBag<Component*> & getComponents();
+
+			bool isActive();
+			void refresh();
+			void remove();
+			void setGroup(std::string group);
+			void setTag(std::string tag);
+
+
+	};
 }
-
-
-#endif //SFECS_ENTITY_HPP
+#endif // $(Guard token)
