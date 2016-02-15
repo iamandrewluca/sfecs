@@ -15,4 +15,4 @@ function( build_example SAMPLE_NAME SOURCES )
     )
 endfunction()
 
-build_example( "HelloWorld" "HelloWorld.cpp" )
+build_example( "MainExample" "MainExample.cpp" )

@@ -3,8 +3,11 @@
 //
 
 #include <SFECS/Sfecs.hpp>
+#include <iostream>
 
 int main() {
+
+    std::cout << "ASDASDASD" << std::endl;
 
 //    sfecs::World world;
 //
