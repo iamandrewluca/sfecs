@@ -120,6 +120,8 @@ elseif( CMAKE_COMPILER_IS_GNUCXX )
     set( CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}" )
 endif()
 
+set(CMAKE_CXX_FLAGS "-std=c++14")
+
 ### EXAMPLES ###
 
 if( SFECS_BUILD_EXAMPLES )

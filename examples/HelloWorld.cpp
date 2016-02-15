@@ -7,7 +7,6 @@
 #include <SFECS/Manager.hpp>
 #include <SFECS/ComponentMapper.hpp>
 #include <SFML/Graphics.hpp>
-#include <windows.h>
 
 class MovementComponent : public sfecs::Component
 {
@@ -236,9 +235,7 @@ int main() {
 
     sf::RenderWindow window(sf::VideoMode(800, 600), "SFML works!");
 
-    sf::RenderWindow window1(sf::VideoMode(800, 600), "SFML worsks!");
-
-    while (window.isOpen() && window1.isOpen())
+    while (window.isOpen())
     {
         sf::Event event;
         while (window.pollEvent(event))
@@ -263,8 +260,6 @@ int main() {
         window.draw(player.getComponent<RenderComponent>()->shape);
 
         window.display();
-
-        window1.display();
     }
 
     return 0;
