@@ -133,6 +133,8 @@ elseif( CMAKE_COMPILER_IS_GNUCXX )
     set( CMAKE_C_FLAGS "-Wall -Wextra -Wshadow -Wconversion -Wno-long-long -pedantic ${CMAKE_C_FLAGS}" )
 endif()
 
+set(CMAKE_CXX_FLAGS "-std=c++14")
+
 ### EXAMPLES ###
 
 if( SFECS_BUILD_EXAMPLES )
