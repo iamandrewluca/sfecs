@@ -8,5 +8,5 @@ add_executable(sfecs_tests
         WorldTest.cpp
         EntityTest.cpp)
 
-target_link_libraries(sfecs_tests ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES})
-target_link_libraries(sfecs_tests SFECS)
+target_link_libraries(sfecs_tests ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES} )
+target_link_libraries(sfecs_tests SFECS -lpthread -lm)

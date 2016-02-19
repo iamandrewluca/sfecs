@@ -9,6 +9,7 @@ TEST(EntityTest, Constructor) {
     EXPECT_EQ(0, 0);
 }
 
+
 TEST(EntityTest, Destructor) {
     EXPECT_EQ(0, 1);
 }
