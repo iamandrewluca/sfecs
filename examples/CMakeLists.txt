@@ -6,12 +6,12 @@ function( build_example SAMPLE_NAME SOURCES )
 
     install(
             TARGETS ${SAMPLE_NAME}
-            RUNTIME DESTINATION "${SHARE_PATH}/examples" COMPONENT examples
+            RUNTIME DESTINATION "${PROJECT_SOURCE_DIR}/install/examples" COMPONENT examples
     )
 
     install(
             FILES ${SOURCES}
-            DESTINATION "${SHARE_PATH}/examples" COMPONENT examples
+            DESTINATION "${PROJECT_SOURCE_DIR}/install/examples" COMPONENT examples
     )
 endfunction()
 

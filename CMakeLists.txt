@@ -11,6 +11,7 @@ set( SFECS_BUILD_SHARED_LIBS true CACHE BOOL "Build shared library." )
 set( SFECS_BUILD_EXAMPLES true CACHE BOOL "Build examples." )
 set( SFECS_BUILD_DOC false CACHE BOOL "Generate API documentation." )
 set( SFML_STATIC_LIBRARIES false CACHE BOOL "Do you want to link SFML statically?" )
+set( SFECS_BUILD_TESTS true CACHE BOOL "Build tests" )
 
 set(CMAKE_INSTALL_PREFIX ${PROJECT_SOURCE_DIR}/install)
 
@@ -58,89 +59,93 @@ else()
     set_target_properties( SFECS PROPERTIES MINSIZEREL_POSTFIX -s )
 endif()
 
-# # Tell the compiler to export when necessary.
-# set_target_properties( SFECS PROPERTIES DEFINE_SYMBOL SFECS_EXPORTS )
+# Tell the compiler to export when necessary.
+set_target_properties( SFECS PROPERTIES DEFINE_SYMBOL SFECS_EXPORTS )
 
-# # Platform- and compiler-specific options.
-# if( WIN32 )
-#     set( SFECS_STATIC_STD_LIBS FALSE CACHE BOOL "Use statically linked standard/runtime libraries? \
-#         This option must match the one used for SFML." )
+# Platform- and compiler-specific options.
+if( WIN32 )
+    set( SFECS_STATIC_STD_LIBS FALSE CACHE BOOL "Use statically linked standard/runtime libraries? \
+        This option must match the one used for SFML." )
 
-#     # Determine whether we're dealing with a TDM compiler or not
-#     if( CMAKE_COMPILER_IS_GNUCXX )
-#         execute_process( COMMAND "${CMAKE_CXX_COMPILER}" "--version" OUTPUT_VARIABLE GCC_COMPILER_VERSION )
-#         string( REGEX MATCHALL ".*(tdm[64]*-[1-9]).*" COMPILER_GCC_TDM "${GCC_COMPILER_VERSION}" )
-#     endif()
+    # Determine whether we're dealing with a TDM compiler or not
+    if( CMAKE_COMPILER_IS_GNUCXX )
+        execute_process( COMMAND "${CMAKE_CXX_COMPILER}" "--version" OUTPUT_VARIABLE GCC_COMPILER_VERSION )
+        string( REGEX MATCHALL ".*(tdm[64]*-[1-9]).*" COMPILER_GCC_TDM "${GCC_COMPILER_VERSION}" )
+    endif()
 
-#     # Allow the static linking of the runtime libraries
-#     if( SFECS_STATIC_STD_LIBS )
-#         if( SFECS_BUILD_SHARED_LIBS )
-#             message( FATAL_ERROR "\n-> SFECS_STATIC_STD_LIBS and SFECS_BUILD_SHARED_LIBS are not compatible. \
-#                 \n-> They lead to multiple runtime environments which results in undefined behavior.\n" )
-#         else()
-#             add_definitions( -DSFML_STATIC )
-#             if( MSVC )
-#                 foreach( flag CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE )
-#                     if( ${flag} MATCHES "/MD" )
-#                         string( REGEX REPLACE "/MD" "/MT" ${flag} "${${flag}}" )
-#                     endif()
-#                 endforeach()
-#             elseif( CMAKE_COMPILER_IS_GNUCXX AND NOT COMPILER_GCC_TDM )
-#                 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static-libgcc -static-libstdc++" )
-#             endif()
-#         endif()
-#     elseif( COMPILER_GCC_TDM )
-#         set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -shared-libgcc -shared-libstdc++" )
-#     endif()
+    # Allow the static linking of the runtime libraries
+    if( SFECS_STATIC_STD_LIBS )
+        if( SFECS_BUILD_SHARED_LIBS )
+            message( FATAL_ERROR "\n-> SFECS_STATIC_STD_LIBS and SFECS_BUILD_SHARED_LIBS are not compatible. \
+                \n-> They lead to multiple runtime environments which results in undefined behavior.\n" )
+        else()
+            add_definitions( -DSFML_STATIC )
+            if( MSVC )
+                foreach( flag CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE )
+                    if( ${flag} MATCHES "/MD" )
+                        string( REGEX REPLACE "/MD" "/MT" ${flag} "${${flag}}" )
+                    endif()
+                endforeach()
+            elseif( CMAKE_COMPILER_IS_GNUCXX AND NOT COMPILER_GCC_TDM )
+                set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static-libgcc -static-libstdc++" )
+            endif()
+        endif()
+    elseif( COMPILER_GCC_TDM )
+        set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -shared-libgcc -shared-libstdc++" )
+    endif()
 
-#     add_definitions( -DWIN32 )
-#     target_link_libraries( SFECS ${SFML_LIBRARIES} ${SFML_DEPENDENCIES} ${OPENGL_gl_LIBRARY} )
+    add_definitions( -DWIN32 )
+    target_link_libraries( SFECS ${SFML_LIBRARIES} ${SFML_DEPENDENCIES} ${OPENGL_gl_LIBRARY} )
 
-#     if( CMAKE_COMPILER_IS_GNUCXX )
-#         if( SFECS_BUILD_SHARED_LIBS )
-#             set_target_properties( SFECS PROPERTIES PREFIX "" )
-#         endif()
+    if( CMAKE_COMPILER_IS_GNUCXX )
+        if( SFECS_BUILD_SHARED_LIBS )
+            set_target_properties( SFECS PROPERTIES PREFIX "" )
+        endif()
 
-#         set_target_properties( SFECS PROPERTIES IMPORT_SUFFIX ".a" )
-#     endif()
+        set_target_properties( SFECS PROPERTIES IMPORT_SUFFIX ".a" )
+    endif()
 
-#     set( SHARE_PATH "." )
-#     set( LIB_PATH "lib" )
-# elseif( APPLE )
-#     find_library( COREFOUNDATION_LIBRARY CoreFoundation )
-#     mark_as_advanced( COREFOUNDATION_LIBRARY )
+    set( SHARE_PATH "." )
+    set( LIB_PATH "lib" )
+elseif( APPLE )
+    find_library( COREFOUNDATION_LIBRARY CoreFoundation )
+    mark_as_advanced( COREFOUNDATION_LIBRARY )
 
-#     include_directories( SYSTEM /System/Library/Frameworks/CoreFoundation.framework/Headers )
-#     target_link_libraries( SFECS ${SFML_LIBRARIES} ${SFML_DEPENDENCIES} ${OPENGL_gl_LIBRARY} ${COREFOUNDATION_LIBRARY} )
-#     set( SHARE_PATH "${CMAKE_INSTALL_PREFIX}/share/SFECS" )
-#     set( LIB_PATH "lib" )
-# elseif( "${CMAKE_SYSTEM_NAME}" MATCHES "Linux" )
-#     target_link_libraries( SFECS ${SFML_LIBRARIES} ${SFML_DEPENDENCIES} ${OPENGL_gl_LIBRARY} ${X11_LIBRARIES} )
-#     set( SHARE_PATH "${CMAKE_INSTALL_PREFIX}/share/SFECS" )
+    include_directories( SYSTEM /System/Library/Frameworks/CoreFoundation.framework/Headers )
+    target_link_libraries( SFECS ${SFML_LIBRARIES} ${SFML_DEPENDENCIES} ${OPENGL_gl_LIBRARY} ${COREFOUNDATION_LIBRARY} )
+    set( SHARE_PATH "${CMAKE_INSTALL_PREFIX}/share/SFECS" )
+    set( LIB_PATH "lib" )
+elseif( "${CMAKE_SYSTEM_NAME}" MATCHES "Linux" )
+    target_link_libraries( SFECS ${SFML_LIBRARIES} ${SFML_DEPENDENCIES} ${OPENGL_gl_LIBRARY} ${X11_LIBRARIES} )
+    set( SHARE_PATH "${CMAKE_INSTALL_PREFIX}/share/SFECS" )
 
-#     if( LIB_SUFFIX )
-#         set( LIB_PATH "lib${LIB_SUFFIX}" )
-#     else()
-#         set( LIB_PATH "lib" )
-#     endif()
-# else()
-#     target_link_libraries( SFECS ${SFML_LIBRARIES} ${SFML_DEPENDENCIES} ${OPENGL_gl_LIBRARY} )
-#     set( SHARE_PATH "${CMAKE_INSTALL_PREFIX}/share/SFECS" )
-#     set( LIB_PATH "lib" )
-# endif()
+    if( LIB_SUFFIX )
+        set( LIB_PATH "lib${LIB_SUFFIX}" )
+    else()
+        set( LIB_PATH "lib" )
+    endif()
+else()
+    target_link_libraries( SFECS ${SFML_LIBRARIES} ${SFML_DEPENDENCIES} ${OPENGL_gl_LIBRARY} )
+    set( SHARE_PATH "${CMAKE_INSTALL_PREFIX}/share/SFECS" )
+    set( LIB_PATH "lib" )
+endif()
 
-# if( CMAKE_CXX_COMPILER MATCHES ".*clang[+][+]" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang" )
-#     set( CMAKE_CXX_FLAGS "-std=c++11 -Wall -Wextra -Wshadow -Wconversion -Wsign-conversion -Wunused-parameter \
-#         -Wno-long-long -pedantic ${CMAKE_CXX_FLAGS}" )
-#     set( CMAKE_C_FLAGS "-Wall -Wextra -Wshadow -Wconversion -Wno-long-long -pedantic ${CMAKE_C_FLAGS}" )
-# elseif( CMAKE_COMPILER_IS_GNUCXX )
-#     set( CMAKE_CXX_FLAGS "-std=c++11 -Wall -Wextra -Wshadow -Wconversion -Wsign-conversion -Wunused-parameter \
-#         -Wno-long-long -pedantic ${CMAKE_CXX_FLAGS}" )
-#     set( CMAKE_C_FLAGS "-Wall -Wextra -Wshadow -Wconversion -Wno-long-long -pedantic ${CMAKE_C_FLAGS}" )
-# endif()
+if( CMAKE_CXX_COMPILER MATCHES ".*clang[+][+]" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang" )
+    set( CMAKE_CXX_FLAGS "-std=c++14 -Wall -Wextra -Wshadow -Wconversion -Wsign-conversion -Wunused-parameter \
+        -Wno-long-long -pedantic ${CMAKE_CXX_FLAGS}" )
+    set( CMAKE_C_FLAGS "-Wall -Wextra -Wshadow -Wconversion -Wno-long-long -pedantic ${CMAKE_C_FLAGS}" )
+elseif( CMAKE_COMPILER_IS_GNUCXX )
+    set( CMAKE_CXX_FLAGS "-std=c++14 -Wall -Wextra -Wshadow -Wconversion -Wsign-conversion -Wunused-parameter \
+        -Wno-long-long -pedantic ${CMAKE_CXX_FLAGS}" )
+    set( CMAKE_C_FLAGS "-Wall -Wextra -Wshadow -Wconversion -Wno-long-long -pedantic ${CMAKE_C_FLAGS}" )
+endif()
 
-set(CMAKE_CXX_FLAGS "-std=c++14")
+set(CMAKE_CXX_FLAGS "-std=c++14 ${CMAKE_CXX_FLAGS}")
 target_link_libraries( SFECS ${SFML_LIBRARIES} ${SFML_DEPENDENCIES} )
+
+if (SFECS_BUILD_TESTS)
+    add_subdirectory( "tests" )
+endif()
 
 ### EXAMPLES ###
 
@@ -169,7 +174,7 @@ install(
 )
 
 install(
-        FILES README.md AUTHORS.md LICENSE.md CHANGELOG.md
+        FILES README.md AUTHORS.md LICENSE.md LOG.md
         DESTINATION bin
 )
 
