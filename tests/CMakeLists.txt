@@ -1,6 +1,6 @@
 project(sfecs_tests)
 
-find_package(GTEST REQUIRED)
+find_package(GTest REQUIRED)
 
 include_directories(${GTEST_INCLUDE_DIRS})
 
