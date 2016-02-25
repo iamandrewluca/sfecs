@@ -1,28 +1,28 @@
 //
-// Created by Andrei on 17.01.2016.
+// Created by Andrei Luca on 17.01.2016.
 //
-
-#include <SFML/Graphics.hpp>
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
-    sf::CircleShape shape(100.f);
-    shape.setFillColor(sf::Color::Green);
+    sfecs::World* world = new sfecs::World();
 
-    while (window.isOpen())
-    {
-        sf::Event event;
-        while (window.pollEvent(event))
-        {
-            if (event.type == sf::Event::Closed)
-                window.close();
-        }
+    sfecs::Scene* mainScene = new sfecs::Scene();
 
-        window.clear();
-        window.draw(shape);
-        window.display();
-    }
+    world->addScene(mainScene);
+    world->setCurrentScene(mainScene);
+
+    sfecs::Entity* player = new sfecs::Entity();
+
+    sfecs::SpriteComponent* spriteComponent = new sfecs::SpriteComponent();
+    sfecs::TransformComponent* transformComponent = new sfecs::TransformComponent();
+
+    player->addComponent(transformComponent);
+    player->addComponent(spriteComponent);
+
+    mainScene->addEntity(player);
+
+    world->run();
+
 
     return 0;
 }
