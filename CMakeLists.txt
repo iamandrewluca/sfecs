@@ -22,7 +22,13 @@ find_package(SFML REQUIRED system window graphics network audio)
 set( INCLUDE_PATH "${PROJECT_SOURCE_DIR}/include" )
 set( SOURCE_PATH "${PROJECT_SOURCE_DIR}/src" )
 
-file(GLOB SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} include/SFECS/*.hpp src/SFECS/*.cpp )
+file(GLOB SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
+        include/SFECS/*.hpp
+        src/SFECS/*.cpp
+        include/SFECS/Components/*.hpp
+        src/SFECS/Components/*.cpp
+        include/SFECS/Systems/*.hpp
+        src/SFECS/Systems/*.cpp)
 
 include_directories( "${INCLUDE_PATH}" )
 include_directories( "${SOURCE_PATH}" )
