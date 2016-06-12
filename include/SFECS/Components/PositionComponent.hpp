@@ -12,6 +12,7 @@ class PositionComponent : public sfecs::Component
 public:
     float posX;
     float posY;
+    
     PositionComponent(float posX, float posY)
     {
         this->posX = posX;

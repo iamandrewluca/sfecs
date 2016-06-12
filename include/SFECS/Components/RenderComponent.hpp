@@ -12,8 +12,7 @@ class RenderComponent : public  sfecs::Component
 {
 public:
     sf::CircleShape sprite;
-
-    RenderComponent(std::string image)
+    RenderComponent()
     {
         sprite = sf::CircleShape(5);
         sprite.setFillColor(sf::Color::Cyan);

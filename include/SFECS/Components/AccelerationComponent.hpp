@@ -9,6 +9,7 @@
 
 class AccelerationComponent : public sfecs::Component
 {
+	
 public:
     float accelX;
     float accelY;

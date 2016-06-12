@@ -6,7 +6,6 @@
 #define SFECS_SCRIPTCOMPONENT_HPP
 
 #include <SFECS/Components.hpp>
-#include <SFECS/Component.hpp>
 #include <SFECS/Entity.hpp>
 
 class ScriptComponent : public sfecs::Component
