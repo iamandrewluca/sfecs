@@ -9,8 +9,10 @@
 
 int main() {
 
-    sfecs::Manager world;
-    sfecs::SystemManager * sm = world.getSystemManager();
+
+
+    sfecs::Manager manager;
+    sfecs::SystemManager * sm = manager.getSystemManager();
     MovementSystem& movementsys = (MovementSystem&) sm->setSystem(new MovementSystem());
     RenderSystem& rendersy = (RenderSystem&) sm->setSystem(new RenderSystem());
     ScriptSystem& scriptSystem = (ScriptSystem&) sm->setSystem(new ScriptSystem());
@@ -18,7 +20,7 @@ int main() {
     DestroySystem& destroySystem = (DestroySystem&) sm->setSystem(new DestroySystem());
     GravitySystem& gravitySystem = (GravitySystem&) sm->setSystem(new GravitySystem());
 
-    sfecs::EntityManager * em = world.getEntityManager();
+    sfecs::EntityManager * em = manager.getEntityManager();
 
     sm->initializeAll();
 
@@ -53,8 +55,8 @@ int main() {
             }
         }
 
-        world.loopStart();
-        world.setDelta(0.1);
+        manager.loopStart();
+        manager.setDelta(0.1);
 
         gravitySystem.process();
         movementsys.process();
