@@ -34,15 +34,15 @@ int main() {
     float x = (float) (sin(rad) * (rand() % 2));
     float y = (float) (cos(rad) * (rand() % 2));
 
-    player.addComponent(new PositionComponent(50 + rand() % 750, 50 + rand() % 550));
+    player.addComponent(new PositionComponent(400, 300));
     player.addComponent(new MovementComponent(3, 2));
     player.addComponent(new RenderComponent());
     player.addComponent(new ScriptComponent(player));
     player.addComponent(new AccelerationComponent(0.99, 0.99));
-    player.addComponent(new GravityComponent(1));
+    // player.addComponent(new GravityComponent(1));
     player.refresh();
 
-    sf::RenderWindow window(sf::VideoMode(800, 600), "SFML works!");
+    sf::RenderWindow window(sf::VideoMode(800, 600), "Position, Movement, Render, Script, Acceleration");
 
     while (window.isOpen())
     {

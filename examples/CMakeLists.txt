@@ -15,7 +15,10 @@ function( build_example SAMPLE_NAME SOURCES )
     )
 endfunction()
 
-build_example( "HelloWorld" "HelloWorld.cpp" )
+build_example( "Prototype1" "Proto1.cpp" )
+build_example( "Prototype2" "Proto2.cpp" )
+build_example( "Prototype3" "Proto3.cpp" )
+build_example( "Prototype4" "Proto4.cpp" )
 
 # Copy data directory to build cache directory to be able to run examples from
 # there. Useful for testing stuff.
