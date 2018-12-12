@@ -15,20 +15,23 @@ set( SFECS_BUILD_TESTS true CACHE BOOL "Build tests" )
 
 set(CMAKE_INSTALL_PREFIX ${PROJECT_SOURCE_DIR}/install)
 
+
 # Tell CMake where to find additional find Modules
 set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/cmake/Modules/")
 
+set(SFML_ROOT "C:/SFML")
 find_package(SFML REQUIRED system window graphics network audio)
 
 set( INCLUDE_PATH "${PROJECT_SOURCE_DIR}/include" )
 set( SOURCE_PATH "${PROJECT_SOURCE_DIR}/src" )
 
-set(
-        SOURCES
-        "${INCLUDE_PATH}/SFECS/Config.hpp"
-        "${INCLUDE_PATH}/SFECS/World.hpp"
-        "${SOURCE_PATH}/SFECS/World.cpp"
-        "${INCLUDE_PATH}/SFECS/Sfecs.hpp")
+file(GLOB SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
+        include/SFECS/*.hpp
+        src/SFECS/*.cpp
+        include/SFECS/Components/*.hpp
+        src/SFECS/Components/*.cpp
+        include/SFECS/Systems/*.hpp
+        src/SFECS/Systems/*.cpp)
 
 include_directories( "${INCLUDE_PATH}" )
 include_directories( "${SOURCE_PATH}" )
@@ -123,21 +126,12 @@ else()
 endif()
 
 if( CMAKE_CXX_COMPILER MATCHES ".*clang[+][+]" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang" )
-    set( CMAKE_CXX_FLAGS "-std=c++14 -Wall -Wextra -Wshadow -Wconversion -Wsign-conversion -Wunused-parameter \
-        -Wno-long-long -pedantic ${CMAKE_CXX_FLAGS}" )
-    set( CMAKE_C_FLAGS "-Wall -Wextra -Wshadow -Wconversion -Wno-long-long -pedantic ${CMAKE_C_FLAGS}" )
+    set( CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}" )
 elseif( CMAKE_COMPILER_IS_GNUCXX )
-    set( CMAKE_CXX_FLAGS "-std=c++14 -Wall -Wextra -Wshadow -Wconversion -Wsign-conversion -Wunused-parameter \
-        -Wno-long-long -pedantic ${CMAKE_CXX_FLAGS}" )
-    set( CMAKE_C_FLAGS "-Wall -Wextra -Wshadow -Wconversion -Wno-long-long -pedantic ${CMAKE_C_FLAGS}" )
+    set( CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}" )
 endif()
 
-set(CMAKE_CXX_FLAGS "-std=c++14 ${CMAKE_CXX_FLAGS}")
-target_link_libraries( SFECS ${SFML_LIBRARIES} ${SFML_DEPENDENCIES} )
-
-if (SFECS_BUILD_TESTS)
-    add_subdirectory( "tests" )
-endif()
+set(CMAKE_CXX_FLAGS "-std=c++14")
 
 ### EXAMPLES ###
 
@@ -166,8 +160,8 @@ install(
 )
 
 install(
-        FILES README.md AUTHORS.md LICENSE.md LOG.md
-        DESTINATION bin
+        FILES README.md AUTHORS.md LICENSE.md CHANGELOG.md
+        DESTINATION "${SHARE_PATH}"
 )
 
 install(
